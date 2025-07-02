@@ -1,20 +1,35 @@
 package com.marcelodebug.clientcrud.dto;
 
+import com.marcelodebug.clientcrud.entities.Client;
+
 import java.time.LocalDate;
 
 public class ClientDto {
+    private Long id;
     private String name;
     private String cpf;
     private Double income;
     private LocalDate birthDate;
     private Integer children;
 
-    public ClientDto(Integer children, LocalDate birthDate, Double income, String cpf, String name) {
-        this.children = children;
-        this.birthDate = birthDate;
-        this.income = income;
-        this.cpf = cpf;
+    public ClientDto(){}
+
+    public ClientDto(Client client){
+        children = client.getChildren();
+        birthDate = client.getBirthDate();
+        income = client.getIncome();
+        cpf = client.getCpf();
+        name = client.getName();
+        id = client.getId();
+    }
+
+    public ClientDto(Long id, String name, String cpf, Double income, LocalDate birthDate, Integer children) {
+        this.id = id;
         this.name = name;
+        this.cpf = cpf;
+        this.income = income;
+        this.birthDate = birthDate;
+        this.children = children;
     }
 
     public String getName() {
@@ -35,6 +50,10 @@ public class ClientDto {
 
     public Integer getChildren() {
         return children;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
 
