@@ -2,6 +2,7 @@ package com.marcelodebug.clientcrud.controllers;
 
 import com.marcelodebug.clientcrud.dto.ClientDto;
 import com.marcelodebug.clientcrud.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientDto> insertClient(@RequestBody ClientDto dto){
+    public ResponseEntity<ClientDto> insertClient(@Valid @RequestBody ClientDto dto){
         dto = clientService.insertClient(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -37,7 +38,7 @@ public class ClientController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ClientDto> updateClient(@PathVariable Long id, @RequestBody ClientDto dto){
+    public ResponseEntity<ClientDto> updateClient(@PathVariable Long id, @Valid @RequestBody ClientDto dto){
         return ResponseEntity.ok(clientService.updateClient(id, dto));
     }
 

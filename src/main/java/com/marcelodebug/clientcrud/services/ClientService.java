@@ -5,6 +5,7 @@ import com.marcelodebug.clientcrud.entities.Client;
 import com.marcelodebug.clientcrud.repositories.ClientRepository;
 import com.marcelodebug.clientcrud.services.exceptions.DatabaseException;
 import com.marcelodebug.clientcrud.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class ClientService {
 
     @Transactional(readOnly = true)
     public ClientDto findById(Long id){
-        Client client = clientRepository.findById(id).get();
+        Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
         return new ClientDto(client);
     }
 
@@ -41,10 +42,15 @@ public class ClientService {
 
     @Transactional
     public ClientDto updateClient(Long id, ClientDto dto){
-        Client client = clientRepository.getReferenceById(id);
-        copyToDto(client, dto);
-        client = clientRepository.save(client);
-        return new ClientDto(client);
+        try {
+            Client client = clientRepository.getReferenceById(id);
+            copyToDto(client, dto);
+            client = clientRepository.save(client);
+            return new ClientDto(client);
+        }
+        catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
